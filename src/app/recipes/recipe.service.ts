@@ -14,23 +14,22 @@ export class RecipeService {
             'Apple Pie',
             'This is apple pie',
             'https://storage.needpix.com/rsynced_images/apple-2740849_1280.png',
-            [
-                new Ingredient('Apple', 1),
-                new Ingredient('Bread', 5)
-            ]
+            [new Ingredient('Apple', 1), new Ingredient('Bread', 5)]
         ),
         new Recipe(
             'Banana Shake',
             'This is banana shake',
             'https://www.maxpixel.net/static/photo/2x/Banana-Chia-Seeds-Smoothie-Blueberry-Granadilla-3193660.jpg',
-            [
-                new Ingredient('Orange', 5),
-                new Ingredient('Banana', 2)
-            ]
+            [new Ingredient('Orange', 5), new Ingredient('Banana', 2)]
         )
     ];
 
-    constructor(private slService: ShoppingListService) { }
+    constructor(private slService: ShoppingListService) {}
+
+    setRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
+    }
 
     getRecipes() {
         return this.recipes.slice();
