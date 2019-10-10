@@ -9,20 +9,22 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
 
-    private recipes: Recipe[] = [
-        new Recipe(
-            'Apple Pie',
-            'This is apple pie',
-            'https://storage.needpix.com/rsynced_images/apple-2740849_1280.png',
-            [new Ingredient('Apple', 1), new Ingredient('Bread', 5)]
-        ),
-        new Recipe(
-            'Banana Shake',
-            'This is banana shake',
-            'https://www.maxpixel.net/static/photo/2x/Banana-Chia-Seeds-Smoothie-Blueberry-Granadilla-3193660.jpg',
-            [new Ingredient('Orange', 5), new Ingredient('Banana', 2)]
-        )
-    ];
+    // private recipes: Recipe[] = [
+    //     new Recipe(
+    //         'Apple Pie',
+    //         'This is apple pie',
+    //         'https://storage.needpix.com/rsynced_images/apple-2740849_1280.png',
+    //         [new Ingredient('Apple', 1), new Ingredient('Bread', 5)]
+    //     ),
+    //     new Recipe(
+    //         'Banana Shake',
+    //         'This is banana shake',
+    //         'https://www.maxpixel.net/static/photo/2x/Banana-Chia-Seeds-Smoothie-Blueberry-Granadilla-3193660.jpg',
+    //         [new Ingredient('Orange', 5), new Ingredient('Banana', 2)]
+    //     )
+    // ];
+
+    private recipes: Recipe[] = [];
 
     constructor(private slService: ShoppingListService) {}
 
