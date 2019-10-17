@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, Subject } from 'rxjs';
+
+import { User } from './user.model';
 
 export interface AuthResponseData {
     idToken: string;
@@ -14,23 +16,37 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    user = new Subject<User>();
+
     constructor(private http: HttpClient) {}
 
     signup(email: string, password: string) {
-        return this.http
-            .post<AuthResponseData>(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAh0dY4hAgp5dYgSukQ_ZKQ-nhSQosRgmo',
-                {
-                    // tslint:disable-next-line: object-literal-shorthand
-                    email: email,
-                    // tslint:disable-next-line: object-literal-shorthand
-                    password: password,
-                    returnSecureToken: true
-                }
-            )
-            .pipe(catchError(this.handleError));
-        // or the following line is the same thing.
-        // .pipe(catchError(errorRes => this.handleError(errorRes)));
+        return (
+            this.http
+                .post<AuthResponseData>(
+                    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAh0dY4hAgp5dYgSukQ_ZKQ-nhSQosRgmo',
+                    {
+                        // tslint:disable-next-line: object-literal-shorthand
+                        email: email,
+                        // tslint:disable-next-line: object-literal-shorthand
+                        password: password,
+                        returnSecureToken: true
+                    }
+                )
+                // .pipe(catchError(errorRes => this.handleError(errorRes)));
+                // or the following line for catchError operator is the same thing.
+                .pipe(
+                    catchError(this.handleError),
+                    tap(resData =>
+                        this.handleAuthentication(
+                            resData.email,
+                            resData.localId,
+                            resData.idToken,
+                            +resData.expiresIn
+                        )
+                    )
+                )
+        );
     }
 
     login(email: string, password: string) {
@@ -45,7 +61,28 @@ export class AuthService {
                     returnSecureToken: true
                 }
             )
-            .pipe(catchError(errorRes => this.handleError(errorRes)));
+            .pipe(
+                catchError(errorRes => this.handleError(errorRes)),
+                tap(resData =>
+                    this.handleAuthentication(
+                        resData.email,
+                        resData.localId,
+                        resData.idToken,
+                        +resData.expiresIn
+                    )
+                )
+            );
+    }
+
+    private handleAuthentication(
+        email: string,
+        userId: string,
+        token: string,
+        expiresIn: number
+    ) {
+        const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+        const user = new User(email, userId, token, expirationDate);
+        this.user.next(user);
     }
 
     private handleError(errorRes: HttpErrorResponse) {
