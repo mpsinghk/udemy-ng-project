@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 import { User } from './user.model';
 
@@ -26,7 +27,8 @@ export class AuthService {
         return (
             this.http
                 .post<AuthResponseData>(
-                    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAh0dY4hAgp5dYgSukQ_ZKQ-nhSQosRgmo',
+                    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+                        environment.firebaseApiKey,
                     {
                         // tslint:disable-next-line: object-literal-shorthand
                         email: email,
@@ -54,7 +56,8 @@ export class AuthService {
     login(email: string, password: string) {
         return this.http
             .post<AuthResponseData>(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAh0dY4hAgp5dYgSukQ_ZKQ-nhSQosRgmo',
+                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+                    environment.firebaseApiKey,
                 {
                     // tslint:disable-next-line: object-literal-shorthand
                     email: email,
