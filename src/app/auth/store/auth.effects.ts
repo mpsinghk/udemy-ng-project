@@ -1,4 +1,4 @@
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions, ofType, Effect } from '@ngrx/effects';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -16,6 +16,7 @@ export interface AuthResponseData {
 }
 
 export class AuthEffects {
+    @Effect()
     authLogin = this.actions$.pipe(
         ofType(AuthActions.LOGIN_START),
         switchMap((authData: AuthActions.LoginStart) => {
