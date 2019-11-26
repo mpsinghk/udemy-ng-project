@@ -3,10 +3,14 @@ import * as AuthActions from './auth.actions';
 
 export interface State {
     user: User;
+    authError: string;
+    loading: boolean;
 }
 
 const initialState: State = {
-    user: null
+    user: null,
+    authError: null,
+    loading: false
 };
 
 export function authReducer(
@@ -23,6 +27,8 @@ export function authReducer(
             );
             return {
                 ...state,
+                authError: null,
+                loading: false,
                 // tslint:disable-next-line: object-literal-shorthand
                 user: user
             };
@@ -30,6 +36,19 @@ export function authReducer(
             return {
                 ...state,
                 user: null
+            };
+        case AuthActions.LOGIN_START:
+            return {
+                ...state,
+                authError: null,
+                loading: true
+            };
+        case AuthActions.LOGIN_FAIL:
+            return {
+                ...state,
+                user: null,
+                loading: false,
+                authError: action.payload
             };
         default:
             return state;
