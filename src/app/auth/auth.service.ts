@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
+// import { catchError, tap } from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { environment } from '../../environments/environment';
+// import { environment } from '../../environments/environment';
 
 import { User } from './user.model';
 import * as fromApp from '../store/app.reducer';
@@ -25,66 +25,66 @@ export class AuthService {
     private tokenExpirationTimer: any;
 
     constructor(
-        private http: HttpClient,
-        private router: Router,
+        // private http: HttpClient,
+        // private router: Router,
         private store: Store<fromApp.AppState>
     ) {}
 
-    signup(email: string, password: string) {
-        return (
-            this.http
-                .post<AuthResponseData>(
-                    'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-                        environment.firebaseApiKey,
-                    {
-                        // tslint:disable-next-line: object-literal-shorthand
-                        email: email,
-                        // tslint:disable-next-line: object-literal-shorthand
-                        password: password,
-                        returnSecureToken: true
-                    }
-                )
-                // .pipe(catchError(errorRes => this.handleError(errorRes)));
-                // or the following line for catchError operator is the same thing.
-                .pipe(
-                    catchError(this.handleError),
-                    tap(resData =>
-                        this.handleAuthentication(
-                            resData.email,
-                            resData.localId,
-                            resData.idToken,
-                            +resData.expiresIn
-                        )
-                    )
-                )
-        );
-    }
+    // signup(email: string, password: string) {
+    //     return (
+    //         this.http
+    //             .post<AuthResponseData>(
+    //                 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+    //                     environment.firebaseApiKey,
+    //                 {
+    //                     // tslint:disable-next-line: object-literal-shorthand
+    //                     email: email,
+    //                     // tslint:disable-next-line: object-literal-shorthand
+    //                     password: password,
+    //                     returnSecureToken: true
+    //                 }
+    //             )
+    //             // .pipe(catchError(errorRes => this.handleError(errorRes)));
+    //             // or the following line for catchError operator is the same thing.
+    //             .pipe(
+    //                 catchError(this.handleError),
+    //                 tap(resData =>
+    //                     this.handleAuthentication(
+    //                         resData.email,
+    //                         resData.localId,
+    //                         resData.idToken,
+    //                         +resData.expiresIn
+    //                     )
+    //                 )
+    //             )
+    //     );
+    // }
 
-    login(email: string, password: string) {
-        return this.http
-            .post<AuthResponseData>(
-                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-                    environment.firebaseApiKey,
-                {
-                    // tslint:disable-next-line: object-literal-shorthand
-                    email: email,
-                    // tslint:disable-next-line: object-literal-shorthand
-                    password: password,
-                    returnSecureToken: true
-                }
-            )
-            .pipe(
-                catchError(errorRes => this.handleError(errorRes)),
-                tap(resData =>
-                    this.handleAuthentication(
-                        resData.email,
-                        resData.localId,
-                        resData.idToken,
-                        +resData.expiresIn
-                    )
-                )
-            );
-    }
+    // login(email: string, password: string) {
+    //     return this.http
+    //         .post<AuthResponseData>(
+    //             'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+    //                 environment.firebaseApiKey,
+    //             {
+    //                 // tslint:disable-next-line: object-literal-shorthand
+    //                 email: email,
+    //                 // tslint:disable-next-line: object-literal-shorthand
+    //                 password: password,
+    //                 returnSecureToken: true
+    //             }
+    //         )
+    //         .pipe(
+    //             catchError(errorRes => this.handleError(errorRes)),
+    //             tap(resData =>
+    //                 this.handleAuthentication(
+    //                     resData.email,
+    //                     resData.localId,
+    //                     resData.idToken,
+    //                     +resData.expiresIn
+    //                 )
+    //             )
+    //         );
+    // }
 
     autoLogin() {
         const userData: {
@@ -124,7 +124,7 @@ export class AuthService {
     logout() {
         // this.user.next(null);
         this.store.dispatch(new AuthActions.Logout());
-        this.router.navigate(['/auth']);
+        // this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
         if (this.tokenExpirationTimer) {
             clearTimeout(this.tokenExpirationTimer);
@@ -163,23 +163,23 @@ export class AuthService {
         localStorage.setItem('userData', JSON.stringify(user));
     }
 
-    private handleError(errorRes: HttpErrorResponse) {
-        let errorMessage = 'An unknown error occurred!';
-        if (!errorRes.error || !errorRes.error.error) {
-            return throwError(errorMessage);
-        }
-        switch (errorRes.error.error.message) {
-            case 'EMAIL_EXISTS':
-                errorMessage = 'This email already exists.';
-                break;
-            case 'EMAIL_NOT_FOUND':
-                errorMessage = 'This email does not exist.';
-                break;
-            case 'INVALID_PASSWORD':
-                errorMessage = 'Password is not correct.';
-                break;
-        }
+    // private handleError(errorRes: HttpErrorResponse) {
+    //     let errorMessage = 'An unknown error occurred!';
+    //     if (!errorRes.error || !errorRes.error.error) {
+    //         return throwError(errorMessage);
+    //     }
+    //     switch (errorRes.error.error.message) {
+    //         case 'EMAIL_EXISTS':
+    //             errorMessage = 'This email already exists.';
+    //             break;
+    //         case 'EMAIL_NOT_FOUND':
+    //             errorMessage = 'This email does not exist.';
+    //             break;
+    //         case 'INVALID_PASSWORD':
+    //             errorMessage = 'Password is not correct.';
+    //             break;
+    //     }
 
-        return throwError(errorMessage);
-    }
+    //     return throwError(errorMessage);
+    // }
 }
