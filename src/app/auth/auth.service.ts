@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+// import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+// import { Router } from '@angular/router';
 // import { catchError, tap } from 'rxjs/operators';
-import { throwError, BehaviorSubject } from 'rxjs';
+// import { throwError, BehaviorSubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 // import { environment } from '../../environments/environment';
 
@@ -123,9 +123,9 @@ export class AuthService {
 
     logout() {
         // this.user.next(null);
-        this.store.dispatch(new AuthActions.Logout());
+        // this.store.dispatch(new AuthActions.Logout());
         // this.router.navigate(['/auth']);
-        localStorage.removeItem('userData');
+        // localStorage.removeItem('userData');
         if (this.tokenExpirationTimer) {
             clearTimeout(this.tokenExpirationTimer);
         }
@@ -160,7 +160,7 @@ export class AuthService {
             })
         );
         this.autoLogout(expiresIn * 1000);
-        localStorage.setItem('userData', JSON.stringify(user));
+        // localStorage.setItem('userData', JSON.stringify(user));
     }
 
     // private handleError(errorRes: HttpErrorResponse) {
